@@ -34,8 +34,8 @@ public class PersonController {
     @PostMapping("/")
     public ResponseEntity<Person> create(@RequestBody Person person) {
         var savedPerson = this.persons.save(person);
-        return persons.findById(person.getId()).isEmpty() ?
-                new ResponseEntity<>(savedPerson, HttpStatus.CREATED) : new ResponseEntity<>(savedPerson, HttpStatus.CONFLICT);
+        return persons.findById(person.getId()).isEmpty()
+                ? new ResponseEntity<>(savedPerson, HttpStatus.CREATED) : new ResponseEntity<>(savedPerson, HttpStatus.CONFLICT);
     }
 
     @PutMapping("/")
