@@ -33,16 +33,14 @@ public class PersonController {
 
     @PostMapping("/")
     public ResponseEntity<Person> create(@RequestBody Person person) {
-        var savedPerson = this.persons.save(person);
-        return persons.findById(person.getId()).isEmpty()
-                ? new ResponseEntity<>(savedPerson, HttpStatus.CREATED) : new ResponseEntity<>(savedPerson, HttpStatus.CONFLICT);
+        return this.persons.save(person)
+                ? new ResponseEntity<>(person, HttpStatus.CREATED) : new ResponseEntity<>(person, HttpStatus.CONFLICT);
     }
 
     @PutMapping("/")
     public ResponseEntity<Void> update(@RequestBody Person person,
                                        Model model) {
-        this.persons.save(person);
-        if (persons.findById(person.getId()).isEmpty()) {
+        if (!this.persons.save(person)) {
             model.addAttribute("errorMessage", "User not updated !");
             return ResponseEntity.badRequest().build();
         }
@@ -54,8 +52,7 @@ public class PersonController {
                                        Model model) {
         Person person = new Person();
         person.setId(id);
-        this.persons.delete(person);
-        if (persons.findById(person.getId()).isPresent()) {
+        if (!this.persons.delete(person)) {
             model.addAttribute("errorMessage", "User not deleted !");
             return ResponseEntity.badRequest().build();
         }

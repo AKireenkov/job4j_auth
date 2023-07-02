@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class PersonService {
-    PersonRepository personRepository;
+    private final PersonRepository personRepository;
 
     public List<Person> findAll() {
         return personRepository.findAll();
@@ -21,11 +21,21 @@ public class PersonService {
         return personRepository.findById(id);
     }
 
-    public Person save(Person person) {
-        return personRepository.save(person);
+    public boolean save(Person person) {
+        boolean isSaved = true;
+        personRepository.save(person);
+        if (personRepository.findById(person.getId()).isEmpty()) {
+            isSaved = false;
+        }
+        return isSaved;
     }
 
-    public void delete(Person person) {
+    public boolean delete(Person person) {
+        boolean isDeleted = true;
         personRepository.delete(person);
+        if (personRepository.findById(person.getId()).isPresent()) {
+            isDeleted = false;
+        }
+        return isDeleted;
     }
 }
