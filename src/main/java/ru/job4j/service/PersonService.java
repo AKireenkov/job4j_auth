@@ -39,4 +39,17 @@ public class PersonService {
         }
         return isDeleted;
     }
+
+    public boolean update(Person person) {
+        personRepository.delete(person);
+        if (personRepository.findById(person.getId()).isPresent()) {
+            return false;
+        }
+        try {
+            personRepository.save(person);
+        } catch (Exception ex) {
+            return false;
+        }
+        return true;
+    }
 }

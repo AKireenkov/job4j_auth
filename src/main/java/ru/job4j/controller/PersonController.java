@@ -40,7 +40,7 @@ public class PersonController {
     @PutMapping("/")
     public ResponseEntity<Void> update(@RequestBody Person person,
                                        Model model) {
-        if (this.persons.save(person).isEmpty()) {
+        if (!this.persons.update(person)) {
             model.addAttribute("errorMessage", "User not updated !");
             return ResponseEntity.badRequest().build();
         }
