@@ -21,13 +21,14 @@ public class PersonService {
         return personRepository.findById(id);
     }
 
-    public boolean save(Person person) {
-        boolean isSaved = true;
-        personRepository.save(person);
-        if (personRepository.findById(person.getId()).isEmpty()) {
-            isSaved = false;
+    public Optional<Person> save(Person person) {
+        Optional<Person> result = Optional.of(person);
+        try {
+            personRepository.save(person);
+        } catch (Exception ex) {
+            result = Optional.empty();
         }
-        return isSaved;
+        return result;
     }
 
     public boolean delete(Person person) {

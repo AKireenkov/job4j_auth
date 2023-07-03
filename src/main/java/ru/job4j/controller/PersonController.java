@@ -33,14 +33,14 @@ public class PersonController {
 
     @PostMapping("/")
     public ResponseEntity<Person> create(@RequestBody Person person) {
-        return this.persons.save(person)
+        return this.persons.save(person).isPresent()
                 ? new ResponseEntity<>(person, HttpStatus.CREATED) : new ResponseEntity<>(person, HttpStatus.CONFLICT);
     }
 
     @PutMapping("/")
     public ResponseEntity<Void> update(@RequestBody Person person,
                                        Model model) {
-        if (!this.persons.save(person)) {
+        if (this.persons.save(person).isEmpty()) {
             model.addAttribute("errorMessage", "User not updated !");
             return ResponseEntity.badRequest().build();
         }
