@@ -1,6 +1,7 @@
 package ru.job4j.service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.job4j.model.Person;
 import ru.job4j.repository.PersonRepository;
@@ -10,6 +11,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class PersonService {
     private final PersonRepository personRepository;
 
@@ -22,11 +24,12 @@ public class PersonService {
     }
 
     public Optional<Person> save(Person person) {
-        Optional<Person> result = Optional.of(person);
+        Optional<Person> result = Optional.empty();
         try {
             personRepository.save(person);
+            result = Optional.of(person);
         } catch (Exception ex) {
-            result = Optional.empty();
+            log.error("User not saved !");
         }
         return result;
     }
@@ -42,14 +45,16 @@ public class PersonService {
 
     public boolean update(Person person) {
         personRepository.delete(person);
+        boolean isUpdated = false;
         if (personRepository.findById(person.getId()).isPresent()) {
-            return false;
+            throw new IllegalArgumentException("User not deleted !");
         }
         try {
             personRepository.save(person);
+            isUpdated = true;
         } catch (Exception ex) {
-            return false;
+            log.error("User not updated !");
         }
-        return true;
+        return isUpdated;
     }
 }
