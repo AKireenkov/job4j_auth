@@ -25,6 +25,11 @@ public class PersonController {
         return this.persons.findAll();
     }
 
+    @GetMapping("/users/sign-up")
+    public String signUp() {
+        return "sign-up";
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Person> findById(@PathVariable int id) {
         var person = this.persons.findById(id);
@@ -40,6 +45,7 @@ public class PersonController {
         return this.persons.save(person).isPresent()
                 ? new ResponseEntity<>(person, HttpStatus.CREATED) : new ResponseEntity<>(person, HttpStatus.CONFLICT);
     }
+
 
     @PutMapping("/")
     public ResponseEntity<Void> update(@RequestBody Person person,
