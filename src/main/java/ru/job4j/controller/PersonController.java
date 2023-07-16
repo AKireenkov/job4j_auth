@@ -20,14 +20,9 @@ public class PersonController {
     private BCryptPasswordEncoder encoder;
 
 
-    @GetMapping("/")
+    @GetMapping("/all")
     public List<Person> findAll() {
         return this.persons.findAll();
-    }
-
-    @GetMapping("/users/sign-up")
-    public String signUp() {
-        return "sign-up";
     }
 
     @GetMapping("/{id}")
@@ -44,6 +39,19 @@ public class PersonController {
         person.setPassword(encoder.encode(person.getPassword()));
         return this.persons.save(person).isPresent()
                 ? new ResponseEntity<>(person, HttpStatus.CREATED) : new ResponseEntity<>(person, HttpStatus.CONFLICT);
+    }
+
+    @PostMapping("/sign-up")
+    public ResponseEntity<Void> signUp(@RequestBody Person person) {
+        person.setPassword(encoder.encode(person.getPassword()));
+        persons.save(person);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Person> login(@RequestBody Person person) {
+        return persons.findById(person.getId()).isPresent()
+                ? new ResponseEntity<>(person, HttpStatus.OK) : new ResponseEntity<>(person, HttpStatus.NOT_FOUND);
     }
 
 
