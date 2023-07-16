@@ -44,16 +44,9 @@ public class PersonService {
     }
 
     public boolean update(Person person) {
-        personRepository.delete(person);
-        boolean isUpdated = false;
-        if (personRepository.findById(person.getId()).isPresent()) {
-            throw new IllegalArgumentException("User not deleted !");
-        }
-        try {
+        boolean isUpdated = personRepository.existsById(person.getId());
+        if (isUpdated) {
             personRepository.save(person);
-            isUpdated = true;
-        } catch (Exception ex) {
-            log.error("User not updated !");
         }
         return isUpdated;
     }
